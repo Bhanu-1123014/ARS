@@ -1,0 +1,1014 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Anti-Ragging Mechanism</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    :root {
+      --bg: #0b1220;
+      --panel: #0f172a;
+      --elev-1: #111827;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --primary: #3b82f6;
+      --primary-600: #2563eb;
+      --primary-700: #1d4ed8;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --border: #1f2937;
+      --ring: color-mix(in srgb, var(--primary), #fff 10%);
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+      --radius: 12px;
+      --space-1: 6px;
+      --space-2: 10px;
+      --space-3: 14px;
+      --space-4: 18px;
+      --space-5: 22px;
+      --maxw: 1200px;
+      --transition: 180ms ease;
+
+      /* Light accents */
+      --acc-blue: #93c5fd;
+      --acc-cyan: #a5f3fc;
+      --acc-green: #a7f3d0;
+      --acc-pink: #fbcfe8;
+      --acc-amber: #fde68a;
+
+      --header-notice-gap: 28px;
+      --header-spacer-height: 32px;
+
+      /* Welcome hero sizing */
+      --welcome-hero-min-height: 78vh;
+      --welcome-hero-radius: 18px;
+
+      /* Unified dynamic blue buttons */
+      --btn1: var(--primary);
+      --btn2: var(--primary-600);
+      --btn-border: color-mix(in srgb, var(--primary-700), #000 10%);
+      --btn-shadow: 0 8px 22px color-mix(in srgb, var(--primary), transparent 78%);
+      --btn-shadow-hover: 0 12px 28px color-mix(in srgb, var(--primary), transparent 68%);
+      --btn-text: #fff;
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f5f7fb;
+        --panel: #ffffff;
+        --elev-1: #ffffff;
+        --text: #0b1220;
+        --muted: #6b7280;
+        --primary: #2563eb;
+        --primary-600: #1d4ed8;
+        --primary-700: #1e40af;
+        --danger: #b91c1c;
+        --success: #15803d;
+        --warning: #b45309;
+        --border: #e5e7eb;
+        --ring: color-mix(in srgb, var(--primary), #fff 70%);
+        --shadow: 0 12px 28px rgba(2, 6, 23, 0.08);
+      }
+    }
+
+    * { box-sizing: border-box }
+    html { scroll-behavior: smooth }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(1200px 400px at 20% -10%, rgba(59,130,246,0.15), transparent 60%),
+        radial-gradient(900px 350px at 90% -10%, rgba(147,51,234,0.12), transparent 60%),
+        linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg), #000 6%));
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* Animated ambient background layer */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -10% -10% -10% -10%;
+      z-index: -1;
+      background:
+        radial-gradient(800px 300px at 15% -20%, rgba(59,130,246,0.16), transparent 60%),
+        radial-gradient(700px 280px at 85% -10%, rgba(168,85,247,0.14), transparent 60%),
+        radial-gradient(900px 340px at 50% 110%, rgba(34,197,94,0.10), transparent 60%);
+      filter: blur(2px);
+      animation: bgFloat 36s ease-in-out infinite alternate;
+      will-change: transform;
+      pointer-events: none;
+    }
+    @keyframes bgFloat {
+      0%   { transform: translate3d(0,0,0) scale(1); }
+      100% { transform: translate3d(0,10px,0) scale(1.02); }
+    }
+
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--space-4) }
+
+    /* Header */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: saturate(140%) blur(10px);
+      background: color-mix(in srgb, var(--bg), transparent 40%);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition), border-color var(--transition);
+    }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 72px }
+    .brand { display: flex; align-items: center; gap: var(--space-3) }
+    .logo {
+      width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: white; font-weight: 900;
+      background: conic-gradient(from 210deg, #3b82f6, #a855f7, #22c55e, #f59e0b, #ef4444, #3b82f6);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,.18);
+      transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+      will-change: transform;
+    }
+    .logo:hover { transform: rotate(-5deg) scale(1.04); filter: saturate(115%); }
+    .brand-title { font-weight: 900; letter-spacing: .3px; font-size: clamp(24px, 3.2vw, 36px); line-height: 1.1 }
+    .brand-sub { font-size: 12px; color: var(--muted) }
+    nav a {
+      color: var(--muted); text-decoration: none; font-weight: 600;
+      padding: 8px 12px; border-radius: 10px; transition: color var(--transition), background var(--transition), transform var(--transition)
+    }
+    nav a:hover { color: var(--text); background: color-mix(in srgb, var(--panel), transparent 70%); transform: translateY(-1px) }
+    nav a.active { color: var(--text); background: color-mix(in srgb, var(--primary), transparent 88%); border: 1px solid color-mix(in srgb, var(--primary), transparent 60%) }
+
+    .header-spacer { height: var(--header-spacer-height) }
+
+    /* Sections */
+    main { padding: calc(var(--space-5) + var(--header-notice-gap)) 0 var(--space-5) }
+    .stack { display: grid; gap: var(--space-5) }
+    .panel {
+      background: linear-gradient(180deg, color-mix(in srgb, var(--panel), #fff 6%), var(--panel));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: var(--space-5);
+      box-shadow: var(--shadow);
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition), background-color var(--transition), opacity var(--transition);
+    }
+    .panel:hover { border-color: color-mix(in srgb, var(--primary), transparent 60%); transform: translateY(-2px) }
+    .panel h2 { margin: 0 0 10px 0; font-size: 24px; letter-spacing: .2px; text-align: center }
+    .panel > p { margin-top: 0; color: var(--muted); text-align: center }
+
+    /* Welcome hero (professional font sizing + animation) */
+    #welcome.panel {
+      min-height: var(--welcome-hero-min-height);
+      display: grid; place-items: center;
+      text-align: center;
+      background:
+        radial-gradient(1000px 420px at 10% -10%, color-mix(in srgb, var(--primary), transparent 78%), transparent 60%),
+        radial-gradient(900px 380px at 100% 0%, color-mix(in srgb, #a855f7, transparent 80%), transparent 60%),
+        linear-gradient(180deg, color-mix(in srgb, var(--panel), #fff 8%), var(--panel));
+      border-radius: var(--welcome-hero-radius);
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    #welcome h2 {
+      font-size: clamp(36px, 6.2vw, 64px);
+      line-height: 1.06;
+      letter-spacing: .2px;
+      margin-bottom: 8px;
+      font-weight: 900;
+    }
+    #welcome .lead {
+      color: var(--muted);
+      max-width: 920px;
+      margin: 0 auto 12px;
+      font-size: clamp(16px, 2.2vw, 20px);
+      line-height: 1.5;
+    }
+
+    /* Subtle animated grid overlay on welcome */
+    #welcome::after {
+      content: "";
+      position: absolute; inset: 0; z-index: 0; pointer-events: none;
+      background-image:
+        linear-gradient(to right, color-mix(in srgb, var(--text), transparent 94%) 1px, transparent 1px),
+        linear-gradient(to bottom, color-mix(in srgb, var(--text), transparent 94%) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse at center, rgba(0,0,0,.5) 0%, rgba(0,0,0,.15) 40%, transparent 70%);
+      animation: drift 28s linear infinite;
+      opacity: .25;
+    }
+    @keyframes drift {
+      0% { background-position: 0 0, 0 0 }
+      100% { background-position: 28px 28px, 28px 28px }
+    }
+
+    /* CTA button styles (Unified dynamic blue across the portal) */
+    .welcome-cta { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; position: relative; z-index: 1 }
+    button, .btn {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-weight: 800;
+      text-decoration: none;
+      border: 1px solid var(--btn-border);
+      color: var(--btn-text);
+      background: linear-gradient(180deg, var(--btn1), var(--btn2));
+      box-shadow: var(--btn-shadow);
+      transition: transform var(--transition), box-shadow var(--transition), background 240ms ease, filter var(--transition), border-color var(--transition);
+      cursor: pointer;
+    }
+    button:hover, .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--btn-shadow-hover);
+      filter: saturate(110%);
+    }
+    button:active, .btn:active { transform: translateY(0) scale(0.99) }
+    button:disabled, .btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none }
+
+    /* Make any "secondary" or other button variants the same dynamic blue */
+    button.secondary, .btn.secondary,
+    button.ghost, .btn.ghost { 
+      background: linear-gradient(180deg, var(--btn1), var(--btn2)) !important;
+      color: var(--btn-text) !important;
+      border-color: var(--btn-border) !important;
+      box-shadow: var(--btn-shadow) !important;
+    }
+
+    /* Dynamic "reveal on scroll" base states */
+    .reveal { opacity: 0; transform: translateY(12px) scale(.98); will-change: transform, opacity }
+    .reveal.is-visible { opacity: 1; transform: none; transition: transform 600ms cubic-bezier(.21,.75,.22,.99), opacity 600ms ease }
+
+    /* 1 x 3 Message grid */
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-4) }
+    @media (max-width: 980px) { .grid-3 { grid-template-columns: 1fr } }
+    .msg-card {
+      border: 1px dashed var(--border);
+      background: color-mix(in srgb, var(--panel), transparent 6%);
+      padding: var(--space-4);
+      border-radius: 12px;
+      min-height: 180px;
+      transition: border-color var(--transition), background-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .msg-card:hover { border-color: color-mix(in srgb, var(--primary), transparent 50%); transform: translateY(-2px) scale(1.01); box-shadow: 0 10px 26px rgba(0,0,0,.18) }
+    .msg-title { text-align: center; font-weight: 800; letter-spacing: .2px; margin: 0 0 6px 0; font-size: 20px }
+    .msg-body { white-space: pre-wrap; min-height: 90px; font-size: 15px }
+    .msg-meta { color: var(--muted); font-size: 12px; text-align: center; margin-top: 6px }
+    .msg-sign { text-align: center; margin-top: 10px; font-weight: 600; font-size: 14px }
+
+    /* Gallery (3x2 responsive) */
+    .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-3); margin-top: 10px }
+    @media (max-width: 900px) { .gallery { grid-template-columns: repeat(2, 1fr) } }
+    @media (max-width: 560px) { .gallery { grid-template-columns: 1fr } }
+    .gallery img, .gallery .ph {
+      width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px;
+      border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 8%);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .gallery img:hover { transform: translateY(-3px); box-shadow: 0 12px 26px rgba(0,0,0,.2) }
+    .ph { display: grid; place-items: center; color: var(--muted); font-size: 13px }
+
+    /* NOTICE section: improved UI */
+    #notices .notice-head { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px }
+    #noticeList {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-3);
+    }
+    .notice {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      background: color-mix(in srgb, var(--panel), transparent 4%);
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition), background-color var(--transition);
+    }
+    .notice:hover {
+      border-color: color-mix(in srgb, var(--primary), transparent 50%);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(0,0,0,.18);
+      background: color-mix(in srgb, var(--panel), transparent 2%);
+    }
+    .notice .title {
+      font-weight: 800;
+      font-size: 18px;
+      margin-bottom: 4px;
+      letter-spacing: .2px;
+    }
+    .notice .meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    #noticeList .notice a {
+      color: #fff;
+      text-decoration: none;
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: linear-gradient(180deg, var(--btn1), var(--btn2));
+      border: 1px solid var(--btn-border);
+      box-shadow: var(--btn-shadow);
+      transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
+    }
+    #noticeList .notice a:hover { transform: translateY(-2px); box-shadow: var(--btn-shadow-hover); filter: saturate(110%) }
+
+    .notice-head .tag {
+      background: linear-gradient(90deg, color-mix(in srgb, var(--acc-blue), transparent 60%), color-mix(in srgb, var(--acc-cyan), transparent 60%));
+      color: #0b1220; border: 1px solid #ffffff44;
+      padding: 4px 10px; border-radius: 999px; font-size: 12px;
+    }
+
+    /* Enhanced Form and Revisit UI */
+    #form h2, #revisit h2 {
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 900;
+      letter-spacing: .3px;
+    }
+    #form > p, #revisit > p { font-size: 14px }
+
+    /* Fields: larger readable inputs */
+    #form label, #revisit label { font-weight: 700; font-size: 14px; display: inline-block; margin-bottom: 6px }
+    input[type="text"], input[type="email"], textarea, select {
+      width: 100%; padding: 14px 14px; border-radius: 14px;
+      border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%); color: var(--text);
+      outline: none; transition: border-color var(--transition), box-shadow var(--transition), background-color var(--transition), transform var(--transition);
+      font-size: 15px;
+    }
+    input::placeholder, textarea::placeholder { color: color-mix(in srgb, var(--muted), transparent 0%) }
+    input:hover, textarea:hover, select:hover { border-color: color-mix(in srgb, var(--primary), transparent 60%) }
+    input:focus, textarea:focus, select:focus { border-color: var(--primary-600); box-shadow: 0 0 0 4px var(--ring); background: color-mix(in srgb, var(--panel), transparent 0%) }
+    textarea { min-height: 160px; resize: vertical }
+    .checkbox { display: flex; gap: 10px; align-items: flex-start; margin-top: 6px; font-size: 14px }
+
+    /* Form actions and statuses */
+    .actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:12px }
+    .status { padding: 10px 12px; border-radius: 12px; font-weight: 600; border: 1px solid var(--border); font-size: 14px; background: color-mix(in srgb, var(--panel), transparent 6%) }
+    .status.success { color: var(--success); background: color-mix(in srgb, var(--success), transparent 90%); border-color: color-mix(in srgb, var(--success), transparent 60%) }
+    .status.error { color: var(--danger); background: color-mix(in srgb, var(--danger), transparent 90%); border-color: color-mix(in srgb, var(--danger), transparent 60%) }
+    .status.info { color: var(--primary); background: color-mix(in srgb, var(--primary), transparent 90%); border-color: color-mix(in srgb, var(--primary), transparent 60%) }
+
+    /* Key/value display blocks */
+    .kv { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 12px; margin: 8px 0;
+      border: 1px dashed var(--border); border-radius: 12px; background: color-mix(in srgb, var(--panel), transparent 6%) }
+    .kv .muted { color: var(--muted); font-size: 13px }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace }
+
+    .copybox { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 8px; }
+    .copybox .mono { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%) }
+
+    /* Revisit result card styling */
+    #revisitResult { padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%); }
+
+    /* Footer styled like header, centered content */
+    footer {
+      margin-top: var(--space-5);
+      backdrop-filter: saturate(140%) blur(10px);
+      background: color-mix(in srgb, var(--bg), transparent 40%);
+      border-top: 1px solid var(--border);
+    }
+    .footer-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      .logo, .panel, .msg-card, .gallery img, body::before, #welcome::after { animation: none !important; transition: none !important }
+      .reveal { opacity: 1; transform: none }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">AR</div>
+        <div>
+          <div class="brand-title">Anti-Ragging Portal</div>
+          <div class="brand-sub">Report. Review. Resolve.</div>
+        </div>
+      </div>
+      <nav aria-label="Primary" id="mainNav">
+        <a href="#messages">Messages</a>
+        <a href="#antiRagging">Anti Ragging</a>
+        <a href="#antiRaggingWeek">Anti Ragging Week</a>
+        <a href="#notices">Notices</a>
+        <a href="#form">File Complaint</a>
+        <a href="#revisit">Revisit</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="header-spacer" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <div class="stack">
+      <!-- Welcome section -->
+      <section id="welcome" class="panel reveal" aria-labelledby="welcome-title">
+        <div>
+          <h2 id="welcome-title">Welcome to the Sri Venkateswara College Anti‑Ragging Portal</h2>
+          <p class="lead">Your safety and dignity come first. Learn our zero‑tolerance policy, read important messages, and file or revisit complaints securely.</p>
+          <div class="welcome-cta">
+            <a href="#form" class="btn">File a Complaint</a>
+            <a href="#antiRagging" class="btn">Know the Policy</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Messages: Principal first, then Proctor, then Staff Advisor -->
+      <section id="messages" class="panel reveal" aria-labelledby="messages-title">
+        <h2 id="messages-title">Important Messages</h2>
+        <p>Guidance and assurance from the Principal, Proctor, and Staff Advisor.</p>
+        <div class="grid-3">
+          <article class="msg-card reveal" aria-labelledby="principal-title">
+            <h3 class="msg-title" id="principal-title">Principal's Message</h3>
+            <div id="msgPrincipal" class="msg-body">Welcome. The Principal's message will appear here.</div>
+            <div class="msg-sign" id="signPrincipal">— Prof. [Principal Name]</div>
+            <div class="msg-meta" id="msgPrincipalMeta"></div>
+          </article>
+
+          <article class="msg-card reveal" aria-labelledby="proctor-title">
+            <h3 class="msg-title" id="proctor-title">Proctor's Message</h3>
+            <div id="msgProctor" class="msg-body">‘Ragging’…… the term was initially used to depict something that represented a mild jousting by seniors of their juniors in an attempt at getting to know them with friendly banter and games. Interacting with juniors, helping them learn the ropes and understand the system is good, but when one crosses the crosses the line and impinges on the others dignity and freedom, the act becomes unpardonable. And that is exactly what ragging is now perceived to be.
+Nowadays ragging has reached monstrous proportions with horrifying physical and verbal abuse being disguised under the garb of ‘interaction’.  Of late, we have a new avatar, where it has gone into the cyber space where covert, anonymous and blatant harassment is done which can be construed as ragging. Hence today we have in place very strict anti-ragging actions that can range from reprimands to expulsion and imprisonment.
+I would like to caution the juniors to be aware of these rules and reach out to the administration and mentors in the event they face any such issues. I would also like to reassure one and all that at Sri Venkateswara, we hope that all our students do not indulge in any such acts and behave like the upright, courteous and responsible citizens we are training them to be.
+I will end by saying that please students treat everyone, whoever they are with the respect and courtesy you would want to receive. 
+</div>
+            <div class="msg-sign" id="signProctor">— Dr. [Proctor Name]</div>
+            <div class="msg-meta" id="msgProctorMeta"></div>
+          </article>
+
+          <article class="msg-card reveal" aria-labelledby="advisor-title">
+            <h3 class="msg-title" id="advisor-title">Staff Advisor's Message</h3>
+            <div id="msgStaff" class="msg-body">Welcome. The Staff Advisor's message will appear here.</div>
+            <div class="msg-sign" id="signStaff">— Dr. [Staff Advisor Name]</div>
+            <div class="msg-meta" id="msgStaffMeta"></div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Anti Ragging info -->
+      <section id="antiRagging" class="panel reveal" aria-labelledby="anti-title">
+        <h2 id="anti-title">Anti Ragging</h2>
+        <p>Sri Venkateswara College maintains a zero‑tolerance policy towards ragging.</p>
+        <div style="max-width: 940px; margin: 0 auto">
+          <div style="display:grid; gap:10px">
+            <div>
+              <strong>What is ragging?</strong>
+              <div class="hint" style="text-align:left">
+                Any conduct by a student or group of students that causes or is likely to cause physical or psychological harm, creates a sense of fear or shame, or violates dignity.
+                It includes teasing, abuse, forced activities, bullying (online/offline), or any harassment.
+              </div>
+            </div>
+
+            <div>
+              <strong>College stance</strong>
+              <ul class="hint" style="text-align:left; margin:6px 0 0 18px">
+                <li>Zero tolerance: every complaint is taken seriously and processed confidentially.</li>
+                <li>Dedicated Anti‑Ragging Committee and Squad for prompt action.</li>
+                <li>Use this portal to report incidents. In emergencies, contact the college helpline or the nearest authority immediately.</li>
+              </ul>
+            </div>
+
+            <div>
+              <strong>Consequences at SVC (illustrative)</strong>
+              <ul class="hint" style="text-align:left; margin:6px 0 0 18px">
+                <li>Counselling, warnings, community service.</li>
+                <li>Suspension from classes/exams, withholding results, withdrawal of scholarships.</li>
+                <li>Debarment from representing the college/hostel facilities.</li>
+                <li>Rustication/expulsion and filing of police complaints where applicable.</li>
+              </ul>
+              <div class="hint" style="text-align:left">Note: Refer to latest college notifications/handbook for official rules.</div>
+            </div>
+
+            <div>
+              <strong>Related laws in India (summary)</strong>
+              <ul class="hint" style="text-align:left; margin:6px 0 0 18px">
+                <li>UGC Regulations on Curbing the Menace of Ragging in Higher Educational Institutions, 2009.</li>
+                <li>Acts under IPC may apply depending on severity (e.g., assault, hurt, criminal intimidation, outraging modesty, etc.).</li>
+                <li>Institutions must file FIRs in cognizable cases and support victims.</li>
+              </ul>
+              <div class="hint" style="text-align:left">For authoritative details, consult UGC/Delhi University circulars and applicable statutes.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Anti Ragging Week -->
+      <section id="antiRaggingWeek" class="panel reveal" aria-labelledby="week-title">
+        <h2 id="week-title">Anti Ragging Week</h2>
+        <p>Share highlights, schedules, and awareness activities conducted during the week.</p>
+
+        <div id="weekText" style="min-height:80px; border:1px dashed var(--border); border-radius:12px; padding:10px; background:color-mix(in srgb, var(--panel), transparent 6%);" class="reveal">
+          🚫✨ Stand Up, Speak Out – Say NO to Ragging! ✨🚫
+Sri Venkateswara College, University of Delhi is organising anti ragging week from 12th-18th august in their college premises.
+        </div>
+
+        <div class="gallery" id="weekGallery">
+          <img class="reveal" src="https://picsum.photos/seed/ar1/600/400" alt="Anti Ragging Week photo 1" />
+          <img class="reveal" src="https://picsum.photos/seed/ar2/600/400" alt="Anti Ragging Week photo 2" />
+          <img class="reveal" src="https://picsum.photos/seed/ar3/600/400" alt="Anti Ragging Week photo 3" />
+          <div class="ph reveal">Add Photo</div>
+          <div class="ph reveal">Add Photo</div>
+          <div class="ph reveal">Add Photo</div>
+        </div>
+      </section>
+
+      <!-- Notice Board -->
+      <section id="notices" class="panel reveal" aria-labelledby="notices-title">
+        <div class="notice-head">
+          <h2 id="notices-title">NOTICE</h2>
+          <span class="tag" id="noticeCount">0 notices</span>
+        </div>
+        <p>Competitions, seminars, policies, and anti‑ragging updates published by Admin.</p>
+        <div id="noticeList" aria-live="polite" aria-busy="true">
+          <div class="notice reveal">
+            <div class="title">Loading notices…</div>
+            <div class="meta">Please wait</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- File Complaint -->
+      <section class="panel reveal" id="form" aria-labelledby="form-title">
+        <h2 id="form-title">File an Anti Ragging Complaint</h2>
+        <p>Please provide accurate details. A unique AR ID (format AG-XXXX) will be generated after submission to revisit your complaint.</p>
+
+        <form id="complaintForm" novalidate>
+          <div class="row" style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-4)">
+            <div>
+              <label for="fullName">Full Name</label>
+              <input id="fullName" name="fullName" type="text" autocomplete="name" placeholder="e.g., Priya Sharma" required />
+            </div>
+            <div>
+              <label for="email">Email Address</label>
+              <input id="email" name="email" type="email" autocomplete="email" placeholder="e.g., priya@example.com" required />
+            </div>
+          </div>
+
+          <div class="row" style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-4)">
+            <div>
+              <label for="phone">10‑Digit Mobile Number</label>
+              <input id="phone" name="phone" type="text" inputmode="numeric" pattern="^[0-9]{10}$" placeholder="e.g., 9876543210" required />
+              <div class="hint" style="font-size:12px; color:var(--muted)">Digits only, no spaces or country code.</div>
+            </div>
+            <div>
+              <label for="roll">7‑Digit Roll Number</label>
+              <input id="roll" name="roll" type="text" inputmode="numeric" pattern="^[0-9]{7}$" placeholder="e.g., 2103456" required />
+              <div class="hint" style="font-size:12px; color:var(--muted)">Digits only.</div>
+            </div>
+          </div>
+
+          <div class="row" style="display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-4)">
+            <div>
+              <label for="course">Course</label>
+              <select id="course" name="course" required>
+                <option value="">Select Course…</option>
+                <option>B.A. (Hons.) Economics</option>
+                <option>B.A. (Hons.) English</option>
+                <option>B.A. (Hons.) History</option>
+                <option>B.A. (Hons.) Political Science</option>
+                <option>B.A. Programme</option>
+                <option>B.Com (Hons.)</option>
+                <option>B.Com Programme</option>
+                <option>B.Sc. (Hons.) Botany</option>
+                <option>B.Sc. (Hons.) Chemistry</option>
+                <option>B.Sc. (Hons.) Computer Science</option>
+                <option>B.Sc. (Hons.) Mathematics</option>
+                <option>B.Sc. (Hons.) Physics</option>
+                <option>B.Sc. (Hons.) Zoology</option>
+                <option>B.Sc. Life Sciences</option>
+                <option>B.Sc. Physical Science with Chemistry</option>
+                <option>B.Sc. Physical Science with Computer Science</option>
+              </select>
+              <div class="hint" style="font-size:12px; color:var(--muted)">Delhi University course list.</div>
+            </div>
+            <div>
+              <label for="year">Year</label>
+              <select id="year" name="year" required>
+                <option value="">Select Year…</option>
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row" style="display:grid; grid-template-columns: 1fr; gap: var(--space-4)">
+            <div>
+              <label>Is this your first complaint against ragging?</label>
+              <div class="inline" role="radiogroup" aria-label="First complaint" style="display:flex; gap:14px; align-items:center; flex-wrap:wrap">
+                <label class="inline"><input type="radio" name="first" value="yes" required /> Yes</label>
+                <label class="inline"><input type="radio" name="first" value="no" required /> No</label>
+              </div>
+            </div>
+            <div>
+              <label for="description">Complaint Description</label>
+              <textarea id="description" name="description" placeholder="Describe the incident in detail…" required></textarea>
+              <div class="hint" style="font-size:12px; color:var(--muted)">Include date, time, location, names (if known), witnesses, and any evidence.</div>
+            </div>
+          </div>
+
+          <div class="checkbox">
+            <input id="confirm" name="confirm" type="checkbox" required />
+            <label for="confirm">I confirm that all the above details are correct to the best of my knowledge.</label>
+          </div>
+
+          <div class="actions">
+            <button id="submitBtn" type="submit">Submit Complaint</button>
+            <button class="secondary" type="reset">Reset</button>
+            <span id="formStatus" class="status info" style="display:none"></span>
+          </div>
+        </form>
+
+        <div id="submitResult" class="result reveal" style="display:none" aria-live="polite">
+          <div class="status success" style="margin-bottom:8px">Complaint submitted successfully.</div>
+          <div class="kv"><div class="muted">Your AR ID</div><div class="mono" id="outArId">—</div></div>
+          <div class="kv"><div class="muted">Submission Date</div><div id="outDate">—</div></div>
+          <div class="copybox">
+            <span id="copyArId" class="mono">AG-XXXX</span>
+            <button id="copyBtn" type="button">Copy</button>
+          </div>
+          <div class="hint" style="font-size:12px; color:var(--muted)">Keep this AR ID safe. Use it in the Revisit section below to check status and any admin response.</div>
+        </div>
+      </section>
+
+      <!-- Revisit -->
+      <section id="revisit" class="panel reveal" aria-labelledby="revisit-title">
+        <h2 id="revisit-title">Revisit Your Complaint</h2>
+        <p>Enter your AR ID to view your complaint details and status. Format: AG-XXXX (case-insensitive).</p>
+
+        <div class="inline" style="gap:10px; margin-bottom:10px; justify-content:center; display:flex; flex-wrap:wrap; align-items:center">
+          <label for="revisitId" class="sr-only">AR ID</label>
+          <input id="revisitId" type="text" placeholder="e.g., AG-4K9Q" style="width:280px" />
+          <button id="revisitBtn" type="button">Fetch Details</button>
+          <button id="revisitClearBtn" type="button" class="secondary">Clear</button>
+          <span id="revisitStatus" class="status info" style="display:none"></span>
+        </div>
+
+        <div id="revisitResult" class="result reveal" style="display:none">
+          <div class="kv"><div class="muted">AR ID</div><div class="mono" id="rvArId">—</div></div>
+          <div class="kv"><div class="muted">Name</div><div id="rvName">—</div></div>
+          <div class="kv"><div class="muted">Roll Number</div><div id="rvRoll">—</div></div>
+          <div class="kv"><div class="muted">Course</div><div id="rvCourse">—</div></div>
+          <div class="kv"><div class="muted">Year</div><div id="rvYear">—</div></div>
+          <div style="margin-top:8px">
+            <div class="muted" style="font-weight:700;margin-bottom:4px">Complaint Description</div>
+            <div id="rvDesc" style="white-space:pre-wrap"></div>
+          </div>
+          <div style="margin-top:8px">
+            <div class="muted" style="font-weight:700;margin-bottom:4px">Message from Admin</div>
+            <div id="rvAdminMsg" style="white-space:pre-wrap">—</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap footer-inner">
+      <div>© SVC Anti‑Ragging Cell<span id="yearNow" style="display:none"></span></div>
+    </div>
+  </footer>
+
+  <script type="module">
+    // Firebase Setup (using your provided config)
+    const firebaseConfig = {
+      apiKey: "AIzaSyAEwpdyTaxjLsRhnGLqGgAOdmGTXXjHeHc",
+      authDomain: "anti-ragging-system-7b7f1.firebaseapp.com",
+      projectId: "anti-ragging-system-7b7f1",
+      storageBucket: "anti-ragging-system-7b7f1.firebasestorage.app",
+      messagingSenderId: "308700904830",
+      appId: "1:308700904830:web:06a6ad14b7879d167e472f"
+    };
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getFirestore, doc, getDoc, setDoc, collection, query, orderBy, limit, getDocs, serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Elements
+    const noticeList = document.getElementById('noticeList');
+    const noticeCount = document.getElementById('noticeCount');
+
+    // Message cards
+    const msgProctor = document.getElementById('msgProctor');
+    const msgProctorMeta = document.getElementById('msgProctorMeta');
+    const msgPrincipal = document.getElementById('msgPrincipal');
+    const msgPrincipalMeta = document.getElementById('msgPrincipalMeta');
+    const msgStaff = document.getElementById('msgStaff');
+    const msgStaffMeta = document.getElementById('msgStaffMeta');
+
+    // Submit/result elements
+    const form = document.getElementById('complaintForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const formStatus = document.getElementById('formStatus');
+    const submitResult = document.getElementById('submitResult');
+    const outArId = document.getElementById('outArId');
+    const outDate = document.getElementById('outDate');
+    const copyArSpan = document.getElementById('copyArId');
+    const copyBtn = document.getElementById('copyBtn');
+
+    // Revisit elements
+    const revisitIdInput = document.getElementById('revisitId');
+    const revisitBtn = document.getElementById('revisitBtn');
+    const revisitClearBtn = document.getElementById('revisitClearBtn');
+    const revisitStatus = document.getElementById('revisitStatus');
+    const revisitResult = document.getElementById('revisitResult');
+    const rvArId = document.getElementById('rvArId');
+    const rvName = document.getElementById('rvName');
+    const rvRoll = document.getElementById('rvRoll');
+    const rvCourse = document.getElementById('rvCourse');
+    const rvYear = document.getElementById('rvYear');
+    const rvDesc = document.getElementById('rvDesc');
+    const rvAdminMsg = document.getElementById('rvAdminMsg');
+
+    document.getElementById('yearNow').textContent = new Date().toLocaleString(undefined, { year: 'numeric' });
+
+    // Helpers
+    const ID_PREFIX = 'AG-';
+    const ID_LENGTH = 4;
+    const CHARSET = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+    function randomCode(len) {
+      let s = '';
+      const cryptoObj = (window.crypto || window.msCrypto);
+      if (cryptoObj?.getRandomValues) {
+        const bytes = new Uint8Array(len);
+        cryptoObj.getRandomValues(bytes);
+        for (let i = 0; i < len; i++) s += CHARSET[bytes[i] % CHARSET.length];
+      } else {
+        for (let i = 0; i < len; i++) s += CHARSET[Math.floor(Math.random() * CHARSET.length)];
+      }
+      return s;
+    }
+    async function generateUniqueArId() {
+      let attempts = 0;
+      while (attempts < 10) {
+        const id = ID_PREFIX + randomCode(ID_LENGTH);
+        const ref = doc(db, 'complaints', id);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) return id;
+        attempts++;
+      }
+      throw new Error('Failed to generate a unique AR ID. Please try again.');
+    }
+    function showStatus(el, message, kind = 'info') {
+      el.textContent = message;
+      el.className = `status ${kind}`;
+      el.style.display = 'inline-block';
+    }
+    function hideStatus(el) { el.style.display = 'none'; }
+    function fmtDate(ts) {
+      if (!ts) return '';
+      try {
+        const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
+        return d.toLocaleString();
+      } catch { return String(ts); }
+    }
+    function sanitizeIdInput(v) { return v.trim().toUpperCase().replace(/\s+/g, ''); }
+    function setLoading(btn, loading) {
+      if (loading) {
+        btn.dataset.label = btn.textContent;
+        btn.textContent = 'Please wait…';
+        btn.disabled = true;
+      } else {
+        btn.textContent = btn.dataset.label || 'Submit';
+        btn.disabled = false;
+      }
+    }
+
+    // Load message cards
+    async function loadMessageCards() {
+      // Principal
+      try {
+        const s = await getDoc(doc(db, 'content', 'principalMessage'));
+        if (s.exists()) {
+          const d = s.data();
+          if (d.message) msgPrincipal.textContent = d.message;
+          const nm = d.principalName || d.name;
+          if (nm) document.getElementById('signPrincipal').textContent = `— ${nm}`;
+          msgPrincipalMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
+        }
+      } catch (e) { msgPrincipalMeta.textContent = 'Failed to load'; }
+
+      // Proctor
+      try {
+        const s = await getDoc(doc(db, 'content', 'proctorMessage'));
+        if (s.exists()) {
+          const d = s.data();
+          if (d.message) msgProctor.textContent = d.message;
+          const nm = d.name || d.proctorName;
+          if (nm) document.getElementById('signProctor').textContent = `— ${nm}`;
+          msgProctorMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
+        }
+      } catch (e) { msgProctorMeta.textContent = 'Failed to load'; }
+
+      // Staff Advisor
+      try {
+        const s = await getDoc(doc(db, 'content', 'staffAdvisorMessage'));
+        if (s.exists()) {
+          const d = s.data();
+          if (d.message) msgStaff.textContent = d.message;
+          const nm = d.name || d.staffName;
+          if (nm) document.getElementById('signStaff').textContent = `— ${nm}`;
+          msgStaffMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
+        }
+      } catch (e) { msgStaffMeta.textContent = 'Failed to load'; }
+    }
+
+    // Notices
+    async function loadNotices() {
+      try {
+        noticeList.innerHTML = '';
+        const q = query(collection(db, 'notices'), orderBy('publishedAt', 'desc'), limit(20));
+        const snap = await getDocs(q);
+        let count = 0;
+        snap.forEach(docSnap => {
+          const n = docSnap.data();
+          const wrap = document.createElement('div');
+          wrap.className = 'notice reveal';
+          wrap.innerHTML = `
+            <div class="title">${n.title || 'Untitled'}</div>
+            <div class="meta">${fmtDate(n.publishedAt)}${n.tag ? ' • ' + n.tag : ''}</div>
+            <div style="margin-top:6px; white-space:pre-wrap">${n.content || ''}</div>
+            ${n.link ? `<div><a href="${n.link}" target="_blank" rel="noopener">Read more →</a></div>` : ''}
+          `;
+          noticeList.appendChild(wrap);
+          count++;
+        });
+        if (count === 0) {
+          const wrap = document.createElement('div');
+          wrap.className = 'notice reveal';
+          wrap.innerHTML = `<div class="title">No notices yet</div><div class="meta">Please check back later.</div>`;
+          noticeList.appendChild(wrap);
+        }
+        noticeCount.textContent = `${count} ${count === 1 ? 'notice' : 'notices'}`;
+        registerReveal();
+      } catch (err) {
+        const wrap = document.createElement('div');
+        wrap.className = 'notice';
+        wrap.innerHTML = `<div class="title">Failed to load notices</div><div class="meta" style="color:var(--danger)">${err.message}</div>`;
+        noticeList.appendChild(wrap);
+        noticeCount.textContent = `0 notices`;
+      }
+    }
+
+    // Submit complaint
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      hideStatus(formStatus);
+      submitResult.style.display = 'none';
+
+      const fullName = (document.getElementById('fullName').value || '').trim();
+      const email = (document.getElementById('email').value || '').trim();
+      const phone = (document.getElementById('phone').value || '').trim();
+      const rollNumber = (document.getElementById('roll').value || '').trim();
+      const course = (document.getElementById('course').value || '').trim();
+      const year = (document.getElementById('year').value || '').trim();
+      const first = (new FormData(form)).get('first');
+      const description = (document.getElementById('description').value || '').trim();
+      const confirm = document.getElementById('confirm').checked;
+
+      if (!fullName || !email || !phone || !rollNumber || !course || !year || !first || !description || !confirm) {
+        showStatus(formStatus, 'Please complete all required fields and confirm correctness.', 'error');
+        return;
+      }
+      if (!/^[0-9]{10}$/.test(phone)) {
+        showStatus(formStatus, 'Mobile number must be exactly 10 digits.', 'error');
+        return;
+      }
+      if (!/^[0-9]{7}$/.test(rollNumber)) {
+        showStatus(formStatus, 'Roll number must be exactly 7 digits.', 'error');
+        return;
+      }
+
+      setLoading(submitBtn, true);
+      try {
+        const arId = await generateUniqueArId();
+        const now = serverTimestamp();
+        const data = {
+          fullName, email, phone, rollNumber, course,
+          courseNorm: course.toUpperCase(),
+          year,
+          firstComplaint: first === 'yes',
+          description,
+          status: 'pending',
+          adminResponse: '',
+          createdAt: now,
+          updatedAt: now,
+          nameLower: fullName.toLowerCase(),
+          emailLower: email.toLowerCase(),
+          rollLower: String(rollNumber)
+        };
+
+        await setDoc(doc(db, 'complaints', arId), data);
+
+        outArId.textContent = arId;
+        copyArSpan.textContent = arId;
+        outDate.textContent = new Date().toLocaleString();
+        submitResult.style.display = 'block';
+        showStatus(formStatus, 'Your complaint has been filed. Save your AR ID.', 'success');
+        form.reset();
+        registerReveal();
+      } catch (err) {
+        showStatus(formStatus, err.message || 'Failed to submit complaint. Please try again.', 'error');
+      } finally {
+        setLoading(submitBtn, false);
+      }
+    });
+
+    // Copy AR ID
+    copyBtn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(copyArSpan.textContent);
+        copyBtn.textContent = 'Copied!';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1200);
+      } catch {
+        copyBtn.textContent = 'Copy failed';
+        setTimeout(() => { copyBtn.textContent = 'Copy'; }, 1200);
+      }
+    });
+
+    // Revisit Complaint
+    revisitBtn.addEventListener('click', async () => {
+      const id = sanitizeIdInput(revisitIdInput.value);
+      revisitResult.style.display = 'none';
+      if (!/^AG-[0-9A-Z]{4}$/.test(id)) {
+        showStatus(revisitStatus, 'Please enter a valid AR ID (format AG-XXXX).', 'error');
+        return;
+      }
+      showStatus(revisitStatus, 'Fetching details…', 'info');
+      revisitBtn.disabled = true;
+
+      try {
+        const ref = doc(db, 'complaints', id);
+        const snap = await getDoc(ref);
+        if (!snap.exists()) {
+          showStatus(revisitStatus, 'No complaint found for this AR ID.', 'error');
+          revisitBtn.disabled = false;
+          return;
+        }
+        const d = snap.data();
+        rvArId.textContent = id;
+        rvName.textContent = d.fullName || '—';
+        rvRoll.textContent = d.rollNumber || '—';
+        rvCourse.textContent = d.course || '—';
+        rvYear.textContent = d.year || '—';
+        rvDesc.textContent = d.description || '—';
+        rvAdminMsg.textContent = (d.adminResponse && d.adminResponse.trim())
+          ? d.adminResponse
+          : 'No response from admin yet. Please check again later.';
+        revisitResult.style.display = 'block';
+        showStatus(revisitStatus, 'Loaded.', 'success');
+        setTimeout(() => hideStatus(revisitStatus), 1200);
+        registerReveal();
+      } catch (e) {
+        showStatus(revisitStatus, 'Failed to fetch details. Please try again.', 'error');
+      } finally {
+        revisitBtn.disabled = false;
+      }
+    });
+    revisitClearBtn.addEventListener('click', () => {
+      revisitIdInput.value = '';
+      revisitResult.style.display = 'none';
+      hideStatus(revisitStatus);
+    });
+
+    // Bootstrap
+    loadMessageCards();
+    loadNotices();
+
+    // Nav active link on scroll
+    const sections = ['messages','antiRagging','antiRaggingWeek','notices','form','revisit','welcome'].map(id => document.getElementById(id)).filter(Boolean);
+    const links = [...document.querySelectorAll('#mainNav a')];
+    const map = Object.fromEntries(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const id = e.target.id;
+          links.forEach(a => a.classList.remove('active'));
+          if (map[id]) map[id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-50% 0px -40% 0px', threshold: 0.01 });
+    sections.forEach(s => s && obs.observe(s));
+
+    // Reveal-on-scroll animations
+    function registerReveal() {
+      const nodes = document.querySelectorAll('.reveal:not(.is-visible)');
+      if (!nodes.length) return;
+      const rev = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -10% 0px' });
+      nodes.forEach(n => rev.observe(n));
+    }
+    registerReveal();
+  </script>
+</body>
+</html>
