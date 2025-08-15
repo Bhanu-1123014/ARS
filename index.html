@@ -191,6 +191,24 @@
       animation: drift 28s linear infinite;
       opacity: .25;
     }
+    /* Welcome background photo (50% transparent) */
+#welcome { position: relative; }
+
+#welcome::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: url("assets/welcome/hero.jpg") center / cover no-repeat;
+  opacity: 0.5;        /* 50% transparency */
+  pointer-events: none;
+  z-index: 0;          /* behind the grid overlay */
+}
+
+/* Keep the grid overlay above the photo */
+#welcome::after { z-index: 1; }
+
+/* Ensure text/buttons sit above everything */
+#welcome > * { position: relative; z-index: 2; }
     @keyframes drift {
       0% { background-position: 0 0, 0 0 }
       100% { background-position: 28px 28px, 28px 28px }
