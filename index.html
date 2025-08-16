@@ -390,6 +390,23 @@
       .logo, .panel, .msg-card, .gallery img, body::before, #welcome::after { animation: none !important; transition: none !important }
       .reveal { opacity: 1; transform: none }
     }
+        /* 3-column gallery grid */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .gallery img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border, #233047);
+    }
+    
+    /* Responsive (optional) */
+    @media (max-width: 900px){ .gallery { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px){ .gallery { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -448,8 +465,8 @@ Together, let us build a campus culture where friendship and mentorship replace 
 
 Let kindness be our tradition.
 </div>
-            <div class="msg-sign" id="signPrincipal">—Prof. Vajala Ravi
-Principal
+            <div class="msg-sign" id="signPrincipal">—Prof. Vajala Ravi ,
+Principal ,
 Sri Venkateswara College</div>
             <div class="msg-meta" id="msgPrincipalMeta"></div>
           </article>
@@ -538,6 +555,9 @@ Sri Venkateswara College, University of Delhi is organising anti ragging week fr
           <img loading="lazy" src="assets/week/4.jpg" alt="Anti Ragging Week photo 4" />
           <img loading="lazy" src="assets/week/5.jpg" alt="Anti Ragging Week photo 5" />
           <img loading="lazy" src="assets/week/6.jpg" alt="Anti Ragging Week photo 6" />
+          <img loading="lazy" src="assets/week/7.jpg" alt="Anti Ragging Week photo 7" />
+          <img loading="lazy" src="assets/week/8.jpg" alt="Anti Ragging Week photo 8" />
+          <img loading="lazy" src="assets/week/9.jpg" alt="Anti Ragging Week photo 9" />
         </div>
       </section>
 
