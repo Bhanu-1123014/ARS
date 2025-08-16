@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <title>Anti-Ragging Mechanism</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
   <style>
     :root {
@@ -369,7 +369,7 @@
     .copybox .mono { padding: 8px 10px; border-radius: 10px; border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%) }
 
     /* Revisit result card styling */
-    #revisitResult { padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%); }
+    #revisitResult { padding: 12px; border-radius: 14px; border: 1px solid var(--border); background: color-mix(in srgb, var(--panel), transparent 4%) }
 
     /* Footer styled like header, centered content */
     footer {
@@ -407,6 +407,37 @@
     /* Responsive (optional) */
     @media (max-width: 900px){ .gallery { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px){ .gallery { grid-template-columns: 1fr; } }
+
+    /* ===== Mobile-friendly enhancements (no desktop changes) ===== */
+    @media (max-width: 900px){
+      .wrap { padding-left: var(--space-3); padding-right: var(--space-3); }
+      .panel { padding: var(--space-4); }
+      .header-inner { min-height: 64px; }
+    }
+    @media (max-width: 760px){
+      :root { --welcome-hero-min-height: 64vh; }
+      .header-inner { flex-wrap: wrap; gap: var(--space-3); }
+      /* Make nav horizontally scrollable as pills */
+      #mainNav {
+        width: 100%;
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 6px;
+      }
+      #mainNav::-webkit-scrollbar { display: none; }
+      #mainNav a { flex: 0 0 auto; }
+      /* Stack form rows to single column (override inline styles) */
+      #form .row { grid-template-columns: 1fr !important; }
+      /* Prevent iOS zoom on inputs */
+      input[type="text"], input[type="email"], textarea, select { font-size: 16px; }
+      /* Keep AR ID input within screen */
+      #revisit #revisitId { width: 100% !important; max-width: 420px; }
+      /* Reduce hover lift on mobile to avoid jank */
+      .panel:hover, .msg-card:hover, .gallery img:hover { transform: none; box-shadow: none; }
+    }
   </style>
 </head>
 <body>
@@ -467,7 +498,7 @@ Let kindness be our tradition.
 </div>
             <div class="msg-sign" id="signPrincipal">—Prof. Vajala Ravi ,
 Principal ,
-Sri Venkateswara College</div>
+Sri Venkateswara College</div>
             <div class="msg-meta" id="msgPrincipalMeta"></div>
           </article>
 
