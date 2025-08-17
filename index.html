@@ -117,15 +117,17 @@
     .header-inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); min-height: 72px }
     .brand { display: flex; align-items: center; gap: var(--space-3) }
     .logo {
-      width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: white; font-weight: 900;
+      width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: white; font-weight: 900;
       background: conic-gradient(from 210deg, #3b82f6, #a855f7, #22c55e, #f59e0b, #ef4444, #3b82f6);
       box-shadow: inset 0 0 0 2px rgba(255,255,255,.18);
       transition: transform var(--transition), box-shadow var(--transition), filter var(--transition);
       will-change: transform;
+      object-fit: cover;
     }
+    .brand > div { display: flex; align-items: center; min-height: 44px; }
     .logo:hover { transform: rotate(-5deg) scale(1.04); filter: saturate(115%); }
-    .brand-title { font-weight: 900; letter-spacing: .3px; font-size: clamp(24px, 3.2vw, 36px); line-height: 1.1 }
-    .brand-sub { font-size: 12px; color: var(--muted) }
+    .brand-title { font-weight: 600; letter-spacing: .3px; font-size: clamp(17px, 2.1vw, 25px); line-height: 1.1; margin: 0; }
+    .brand-sub { display:none; } /* removed per request */
     nav a {
       color: var(--muted); text-decoration: none; font-weight: 600;
       padding: 8px 12px; border-radius: 10px; transition: color var(--transition), background var(--transition), transform var(--transition)
@@ -191,7 +193,7 @@
       animation: drift 28s linear infinite;
       opacity: .25;
     }
-    /* Welcome background photo (50% transparent) */
+    /* Welcome background photo (25% transparent) */
 #welcome { position: relative; }
 
 #welcome::before {
@@ -227,7 +229,7 @@
       background: linear-gradient(180deg, var(--btn1), var(--btn2));
       box-shadow: var(--btn-shadow);
       transition: transform var(--transition), box-shadow var(--transition), background 240ms ease, filter var(--transition), border-color var(--transition);
-      cursor: pointer;
+      cursor: pointer.
     }
     button:hover, .btn:hover {
       transform: translateY(-2px);
@@ -438,16 +440,24 @@
       /* Reduce hover lift on mobile to avoid jank */
       .panel:hover, .msg-card:hover, .gallery img:hover { transform: none; box-shadow: none; }
     }
+
+    /* Added: welcome section logo (transparent image) */
+    .welcome-logo {
+      display: block;
+      width: clamp(72px, 12vw, 140px);
+      height: auto;
+      margin: 0 auto 10px;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="wrap header-inner">
       <div class="brand">
-        <div class="logo" aria-hidden="true">AR</div>
+        <img class="logo" src="assets/logo/svc-seal.png" alt="" aria-hidden="true" />
         <div>
-          <div class="brand-title">Anti-Ragging Portal</div>
-          <div class="brand-sub">Report. Review. Resolve.</div>
+          <div class="brand-title">Sri Venkateswara College</div>
         </div>
       </div>
       <nav aria-label="Primary" id="mainNav">
@@ -468,7 +478,10 @@
       <!-- Welcome section -->
       <section id="welcome" class="panel reveal" aria-labelledby="welcome-title">
         <div>
-          <h2 id="welcome-title">Welcome to the Sri Venkateswara College Anti‑Ragging Portal</h2>
+          <!-- Added transparent logo above welcome text -->
+          <img class="welcome-logo" src="assets/logo/svc-lord.png" alt="SVC logo" />
+
+          <h2 id="welcome-title">Welcome to the SVC Anti‑Ragging Portal</h2>
           <p class="lead">Your safety and dignity come first. Learn our zero‑tolerance policy, read important messages, and file or revisit complaints securely.</p>
           <div class="welcome-cta">
             <a href="#form" class="btn">File a Complaint</a>
@@ -484,8 +497,12 @@
         <div class="grid-3">
           <article class="msg-card reveal" aria-labelledby="principal-title">
             <h3 class="msg-title" id="principal-title">Principal's Message</h3>
-            <div id="msgPrincipal" class="msg-body">Dear Students,
-
+            <img loading="lazy" src="assets/messages/principal.jpg" alt="Principal photo" style="display:block; width:100%; aspect-ratio: 4 / 3; border-radius:12px; object-fit:cover; border:1px solid var(--border); margin: 8px 0 12px 0;" />
+            <div class="msg-sign" id="signPrincipal">—Prof. Vajala Ravi ,
+Principal ,
+Sri Venkateswara College</div>
+            <div id="msgPrincipal" class="msg-body">
+Dear Students,
 At Sri Venkateswara College, we take pride in fostering a safe, inclusive, and respectful environment for all. Ragging, in any form, is a grave violation of human dignity and is strictly prohibited by law as well as by our institutional ethos.
 
 Ragging is not a harmless tradition, it is an act that can cause lasting physical, emotional, and psychological harm. Our college has adopted a zero-tolerance policy towards it. Any student found involved in ragging will face strict disciplinary action, including suspension, rustication, and legal proceedings as per the UGC Regulations on Curbing the Menace of Ragging in Higher Educational Institutions, 2009.
@@ -496,33 +513,36 @@ Together, let us build a campus culture where friendship and mentorship replace 
 
 Let kindness be our tradition.
 </div>
-            <img loading="lazy" src="assets/messages/principal.jpg" alt="Principal photo" style="display:block; width:96px; height:96px; border-radius:50%; object-fit:cover; border:1px solid var(--border); margin: 8px auto 0;" />
-            <div class="msg-sign" id="signPrincipal">—Prof. Vajala Ravi ,
-Principal ,
-Sri Venkateswara College</div>
+
             <div class="msg-meta" id="msgPrincipalMeta"></div>
           </article>
 
           <article class="msg-card reveal" aria-labelledby="proctor-title">
             <h3 class="msg-title" id="proctor-title">Proctor's Message</h3>
-            <div id="msgProctor" class="msg-body">‘Ragging’…… the term was initially used to depict something that represented a mild jousting by seniors of their juniors in an attempt at getting to know them with friendly banter and games. Interacting with juniors, helping them learn the ropes and understand the system is good, but when one crosses the crosses the line and impinges on the others dignity and freedom, the act becomes unpardonable. And that is exactly what ragging is now perceived to be.
+            <img loading="lazy" src="assets/messages/proctor.jpg" alt="Proctor photo" style="display:block; width:100%; aspect-ratio: 4 / 3; border-radius:12px; object-fit:cover; border:1px solid var(--border); margin: 8px 0 12px 0;" />
+            <div class="msg-sign" id="signProctor">— Prof. Nandita Narayanasamy</div>
+            <div id="msgProctor" class="msg-body">
+
+‘Ragging’…… the term was initially used to depict something that represented a mild jousting by seniors of their juniors in an attempt at getting to know them with friendly banter and games. Interacting with juniors, helping them learn the ropes and understand the system is good, but when one crosses the crosses the line and impinges on the others dignity and freedom, the act becomes unpardonable. And that is exactly what ragging is now perceived to be.
 Nowadays ragging has reached monstrous proportions with horrifying physical and verbal abuse being disguised under the garb of ‘interaction’.  Of late, we have a new avatar, where it has gone into the cyber space where covert, anonymous and blatant harassment is done which can be construed as ragging. Hence today we have in place very strict anti-ragging actions that can range from reprimands to expulsion and imprisonment.
 I would like to caution the juniors to be aware of these rules and reach out to the administration and mentors in the event they face any such issues. I would also like to reassure one and all that at Sri Venkateswara, we hope that all our students do not indulge in any such acts and behave like the upright, courteous and responsible citizens we are training them to be.
 I will end by saying that please students treat everyone, whoever they are with the respect and courtesy you would want to receive. 
 </div>
-            <img loading="lazy" src="assets/messages/proctor.jpg" alt="Proctor photo" style="display:block; width:96px; height:96px; border-radius:50%; object-fit:cover; border:1px solid var(--border); margin: 8px auto 0;" />
-            <div class="msg-sign" id="signProctor">— Prof. Nandita Narayanasamy</div>
+          
             <div class="msg-meta" id="msgProctorMeta"></div>
           </article>
 
           <article class="msg-card reveal" aria-labelledby="advisor-title">
             <h3 class="msg-title" id="advisor-title">Staff Advisor's Message</h3>
-            <div id="msgStaff" class="msg-body">Sri Venkateswara College welcomes freshers with love and respect that remains the base of long lasting friendship and memories for life. “College is where journeys begin, ideas bloom, and friendships grow, ragging destroys all three. As we step into college life, let’s remember one truth: respect is the real welcome. Ragging is not tradition—it is humiliation. Let’s welcome every fresher with dignity, empathy, and respect — because true strength is in creating memories, not in causing fear.
+            <img loading="lazy" src="assets/messages/staff-advisor.jpg" alt="Staff Advisor photo" style="display:block; width:100%; aspect-ratio: 4 / 3; border-radius:12px; object-fit:cover; border:1px solid var(--border); margin: 8px 0 12px 0;" />
+            <div class="msg-sign" id="signStaff">— Prof. Om Prakash, Staff Advisor</div>
+            <div id="msgStaff" class="msg-body">
+
+Sri Venkateswara College welcomes freshers with love and respect that remains the base of long lasting friendship and memories for life. “College is where journeys begin, ideas bloom, and friendships grow, ragging destroys all three. As we step into college life, let’s remember one truth: respect is the real welcome. Ragging is not tradition—it is humiliation. Let’s welcome every fresher with dignity, empathy, and respect — because true strength is in creating memories, not in causing fear.
 True seniors are not bullies, they are mentors. True juniors are not victims, they are future leaders.
 Let us pledge today to replace ragging with guidance, laughter, and support. Instead of breaking someone’s confidence, let’s be the reason they feel at home in this new environment.
 Say no to ragging, and yes to dignity, unity, and humanity.</div>
-            <img loading="lazy" src="assets/messages/staff-advisor.jpg" alt="Staff Advisor photo" style="display:block; width:96px; height:96px; border-radius:50%; object-fit:cover; border:1px solid var(--border); margin: 8px auto 0;" />
-            <div class="msg-sign" id="signStaff">— Prof. Om Prakash, Staff Advisor</div>
+            
             <div class="msg-meta" id="msgStaffMeta"></div>
           </article>
         </div>
@@ -581,7 +601,7 @@ Say no to ragging, and yes to dignity, unity, and humanity.</div>
         <p>Share highlights, schedules, and awareness activities conducted during the week.</p>
 
         <div id="weekText" style="min-height:80px; border:1px dashed var(--border); border-radius:12px; padding:10px; background:color-mix(in srgb, var(--panel), transparent 6%);" class="reveal">
-          🚫✨ Stand Up, Speak Out – Say NO to Ragging! ✨🚫
+         Stand Up, Speak Out – Say NO to Ragging! 
 Sri Venkateswara College, University of Delhi is organising anti ragging week from 12th-18th august in their college premises.
         </div>
 
@@ -878,7 +898,7 @@ Sri Venkateswara College, University of Delhi is organising anti ragging week fr
           if (nm) document.getElementById('signPrincipal').textContent = `— ${nm}`;
           msgPrincipalMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
         }
-      } catch (e) { msgPrincipalMeta.textContent = 'Failed to load'; }
+      } catch (e) { msgPrincipalMeta.textContent = ''; }
 
       // Proctor
       try {
@@ -890,7 +910,7 @@ Sri Venkateswara College, University of Delhi is organising anti ragging week fr
           if (nm) document.getElementById('signProctor').textContent = `— ${nm}`;
           msgProctorMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
         }
-      } catch (e) { msgProctorMeta.textContent = 'Failed to load'; }
+      } catch (e) { msgProctorMeta.textContent = ''; }
 
       // Staff Advisor
       try {
@@ -902,7 +922,7 @@ Sri Venkateswara College, University of Delhi is organising anti ragging week fr
           if (nm) document.getElementById('signStaff').textContent = `— ${nm}`;
           msgStaffMeta.textContent = `${nm ? '— ' + nm : ''}${d.designation ? ', ' + d.designation : ''}${d.lastUpdated ? ' • Updated ' + fmtDate(d.lastUpdated) : ''}`;
         }
-      } catch (e) { msgStaffMeta.textContent = 'Failed to load'; }
+      } catch (e) { msgStaffMeta.textContent = ''; }
     }
 
     // Notices
